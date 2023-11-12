@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.gestorjuegos.controllers.LoginController">
+<BorderPane xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.gestorjuegos.controllers.LoginController">
    <center>
       <VBox alignment="CENTER" maxHeight="300.0" maxWidth="300.0" spacing="20.0" style="-fx-border-style: solid; -fx-border-radius: 15px;">
           <padding>
@@ -43,6 +43,7 @@
                <Button fx:id="btnCancel" cancelButton="true" mnemonicParsing="false" onAction="#cancel" text="Cancelar" textAlignment="RIGHT" GridPane.rowIndex="3" />
             </children>
          </GridPane>
+         <Button fx:id="btnHack" mnemonicParsing="false" onAction="#hack" text="Hack!" />
       
              <Label fx:id="info" />
          <opaqueInsets>

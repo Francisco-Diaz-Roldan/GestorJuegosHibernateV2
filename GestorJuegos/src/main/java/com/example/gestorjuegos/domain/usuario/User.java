@@ -26,7 +26,7 @@ public class User implements Serializable {
     @Transient
     private Long gamesQuantity;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)//Todas las operaciones de los padres se trasladan a los hijos, es decir, que si creo el padre, los hijos también se crean, si borro al padre, los hijos también se borran.
     private List<Game> games = new ArrayList<>(0);
 
     public Long getGamesQuantity() {

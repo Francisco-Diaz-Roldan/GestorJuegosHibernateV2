@@ -33,6 +33,8 @@ public class LoginController implements Initializable {
     private TextField txtUser;
     @FXML
     private PasswordField txtPassword;
+    @FXML
+    private Button btnHack;
 
     @FXML
     public void login(ActionEvent actionEvent) {
@@ -91,6 +93,16 @@ public class LoginController implements Initializable {
             }
         }
 
+
+    }
+
+    @FXML
+    public void hack(ActionEvent actionEvent) {
+
+        HibernateUtil.getSessionFactory().inTransaction(session -> {
+            User u = session.get(User.class, 4L);
+            session.remove(u);
+        });
 
     }
 }
