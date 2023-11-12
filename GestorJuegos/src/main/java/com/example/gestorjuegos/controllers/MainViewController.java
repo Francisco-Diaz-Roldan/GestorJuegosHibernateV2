@@ -37,6 +37,8 @@ public class MainViewController implements Initializable
     private Label lTotal;
     @javafx.fxml.FXML
     private MenuItem mSalir;
+    @javafx.fxml.FXML
+    private Button btnNuevo;
 
     @javafx.fxml.FXML
     public void salir(ActionEvent actionEvent) {
@@ -93,5 +95,19 @@ public class MainViewController implements Initializable
         lTotal.setText( Session.getCurrentUser().getGamesQuantity()+ " juegos");
         info.setText("Bienvenido "+Session.getCurrentUser().getUsername());
 
+    }
+
+    @javafx.fxml.FXML
+    public void newGame(ActionEvent actionEvent) {
+
+        var g = new Game();
+        g.setUser(Session.getCurrentUser() ) ;
+        Session.setCurrentGame( g );
+
+        try {
+            App.changeScene("game-view.fxml", "Nuevo juego");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

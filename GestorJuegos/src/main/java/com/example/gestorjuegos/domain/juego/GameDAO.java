@@ -2,6 +2,7 @@ package com.example.gestorjuegos.domain.juego;
 
 import com.example.gestorjuegos.domain.DAO;
 import com.example.gestorjuegos.domain.HibernateUtil;
+import lombok.extern.java.Log;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
@@ -10,6 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+@Log
 public class GameDAO implements DAO<Game> {
 
     public static final HashMap<String, String> QUERYATTR;//Porque va a ser común a todos es final y estático y como es una constante va en mayusculas
@@ -48,7 +50,16 @@ public class GameDAO implements DAO<Game> {
 
     @Override
     public Game save(Game data) {
-        return null;
+        Game salida = null;
+        try( org.hibernate.Session s = HibernateUtil.getSessionFactory().openSession()){
+            Transaction t = s.beginTransaction();
+            s.persist(data);//Lo hago persistente por lo que se sincronizan los datos con la base de datos, lo que implica que el objeto se guarda y se modifica
+            t.commit();
+            salida=data;
+        } catch (Exception e){
+            log.severe("Error al guardar juego"+ data.toString());
+        }
+        return data;
     }
 
     @Override
@@ -69,7 +80,10 @@ public class GameDAO implements DAO<Game> {
 
     @Override
     public void delete(Game data) {
-
+        HibernateUtil.getSessionFactory().inTransaction((session) ->{
+         Game g = session.get( Game.class, data.getId());
+         session.remove(g);
+        });
     }
 
     public List<String> getCategories(){

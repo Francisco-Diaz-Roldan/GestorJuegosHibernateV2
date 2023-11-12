@@ -63,6 +63,7 @@ public class GameViewController implements Initializable
     public void volver(ActionEvent actionEvent) {
 
         try {
+            Session.setCurrentGame(null);//Siempre que vuelvo setea a null el currentGame
             App.changeScene("main-view.fxml","Colección de videojuegos");
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -82,6 +83,7 @@ public class GameViewController implements Initializable
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
         gameInfo.setText(Session.getCurrentGame().toString());
+
         spinnerPlayers.setValueFactory( new SpinnerValueFactory.IntegerSpinnerValueFactory(1,4, Math.toIntExact(Session.getCurrentGame().getPlayers()),1) );
         spinnerYear.setValueFactory( new SpinnerValueFactory.IntegerSpinnerValueFactory(1970,2023, Math.toIntExact(Session.getCurrentGame().getYear()),1));
         comboUser.setConverter(new StringConverter<User>() {
@@ -138,15 +140,34 @@ public class GameViewController implements Initializable
         if(comboBoxStatus.getValue().length()>1) g.setBoxStatus( comboBoxStatus.getValue() );
         if(comboGameStatus.getValue().length()>1) g.setGameStatus( comboGameStatus.getValue() );
         if(comboFormat.getValue().length()>1) g.setFormat( comboFormat.getValue() );
+        g.setYear(Long.valueOf(spinnerYear.getValue()));
+        g.setPlayers(Long.valueOf(spinnerPlayers.getValue()));
 
-        gameDAO.update(g);
+        if (g.getId()!=null){//Campo Ide en juego nuevo = null, en un juego seleccionado !=null -> importante paraa hacer un update o un save
+            gameDAO.update(g);//Si selecciono en la tabla el Id no es nulo, por lo que actualiza, en caso contrario, guarda
+        }else{
+            gameDAO.save(g);
+        }
 
-        Session.setCurrentGame(g);
+        volver(null);//Si no se volviera atrás habría que setear para tener sincronizado el currentGame con la base de datos
 
     }
 
     @javafx.fxml.FXML
     public void delete(ActionEvent actionEvent) {
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setContentText("¿Deseas borrar "+Session.getCurrentGame().getName()+ " del listado?");
+
+        var result = alert.showAndWait().get();     //Como es un optional le pongo un get para acceder al componente. Me va a dar la información result del botón que se ha pulsado
+
+        System.out.println(result);//Para comprobar que me lo imprime bien
+        if (result.getButtonData()== ButtonBar.ButtonData.OK_DONE){ //Me aseguro de que solo cuando le dé a aceptar lo borro
+            gameDAO.delete( Session.getCurrentGame() );
+            volver(null);
+        }
+
+
     }
 
 

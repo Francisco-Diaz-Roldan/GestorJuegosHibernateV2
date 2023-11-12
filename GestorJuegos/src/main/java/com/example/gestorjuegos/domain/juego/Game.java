@@ -53,6 +53,11 @@ public class Game implements Serializable {
   @JoinColumn( name = "usuario_id")
   private User user;
 
+  public Game() { //Genero un constructor vacío para inicializar los campos numéricos que son los que nos van a dar problemas por haber puesto el metodo Math en la otra clase
+  this.players=1L;//Genero valores por defecto en el constructor, hacer lo mismo en los demás ejercicios
+  this.year=1980L;
+  }
+
   @Override
   public String toString() {
     return "Game{" +
